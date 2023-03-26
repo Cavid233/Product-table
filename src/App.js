@@ -1,25 +1,39 @@
-import logo from './logo.svg';
-import './App.css';
+import "./App.css";
+import {
+  createBrowserRouter,
+  RouterProvider,
+  createRoutesFromElements,
+  Route,
+} from "react-router-dom";
+import ProductStoreScreen from "./screens/ProductStore/ProductStoreScreen";
+import CreateProductScreen from "./screens/CreateProduct/CreateProductScreen";
+import RootLayout from "./screens/Root/Root";
+import ErrorPage from "./screens/Error/Error";
+// const routeDefinitions = createRoutesFromElements(
+//   <Route>
+//     <Route path="/" element={<ProductStoreScreen />} />
+//     <Route path="/create-product" element={<CreateProductScreen />} />
+//   </Route>
+// )
+
+// const router = createBrowserRouter(routeDefinitions);
+
+const router = createBrowserRouter([
+  {
+    path: "/",
+    element: <RootLayout />,
+    errorElement: <ErrorPage />,
+    children: [
+      { path: "/", element: <ProductStoreScreen /> },
+      { path: "/create-product", element: <CreateProductScreen /> },
+    ],
+  },
+  // {path: '/', element: <ProductStoreScreen />},
+  // {path: '/create-product', element: <CreateProductScreen />},
+]);
 
 function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+  return <RouterProvider router={router} />;
 }
 
 export default App;

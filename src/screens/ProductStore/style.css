@@ -1,0 +1,107 @@
+.header-actions {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: #272727;
+  color: #fff;
+  padding: 20px;
+}
+
+.header-title h1 {
+  font-size: 36px;
+  margin: 10;
+}
+
+.header-search input[type="text"] {
+  width: 300px;
+  padding: 10px;
+  border: none;
+  border-radius: 20px;
+  margin-right: 10px;
+}
+
+.header-search button {
+  background-color: #fff;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 20px;
+  cursor: pointer;
+  color: #272727;
+  font-weight: bold;
+}
+
+.header-search button:hover {
+  background-color: orange;
+  color: white;
+}
+
+.header-create button {
+  background-color: #fff;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 20px;
+  cursor: pointer;
+  color: #272727;
+  font-weight: bold;
+}
+
+.header-create button:hover {
+  background-color: pink;
+  color: white;
+}
+
+.product-list {
+  margin-top: 20px;
+}
+
+table {
+  border-collapse: collapse;
+  width: 100%;
+}
+
+th,
+td {
+  border: 1px solid #ddd;
+  padding: 8px;
+}
+
+th {
+  background-color: #f2f2f2;
+  text-align: left;
+}
+
+td img {
+  display: block;
+  margin: 0 auto;
+  width: 100px;
+}
+
+button.remove {
+  background-color: #f44336;
+  border: none;
+  color: #fff;
+  cursor: pointer;
+  font-size: 16px;
+  padding: 8px;
+}
+
+button.remove:hover {
+  background-color: #fff;
+  color: #f44336;
+  border: 1px solid #f44336;
+}
+
+button.update {
+  background-color: #2196f3;
+  border: none;
+  color: #fff;
+  cursor: pointer;
+  font-size: 16px;
+  padding: 8px;
+}
+
+button.update:hover {
+  background-color: #fff;
+  color: #2196f3;
+  border: 1px solid #2196f3;
+}
