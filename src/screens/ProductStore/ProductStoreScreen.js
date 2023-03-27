@@ -91,7 +91,6 @@ export default function ProductStoreScreen() {
 
   const filterProducts = (event) => {
     const value = event.target.value;
-    console.log("currentProducts", currentProducts);
     switch (value) {
       case "reccomend":
         setCurrentProducts(searchTerm ? searchedProducts : productsList);
