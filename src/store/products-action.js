@@ -13,14 +13,8 @@ export const fetchProducts = () => {
       return data;
     };
 
-    try {
-      const productsData = await fetchData();
-      dispatch(
-        productsActions.setProducts({ products: productsData.products })
-      );
-    } catch (error) {
-      console.log("error", error.message);
-    }
+    const productsData = await fetchData();
+    dispatch(productsActions.setProducts({ products: productsData.products }));
   };
 };
 
@@ -30,7 +24,6 @@ export const setSearchedProducts = (searchTerm) => {
       const response = await fetch(
         "https://dummyjson.com/products/search?q=" + searchTerm
       );
-      console.log("response", response);
       if (!response.ok) {
         throw new Error("Could not fetch products!");
       }
@@ -39,14 +32,10 @@ export const setSearchedProducts = (searchTerm) => {
       return data;
     };
 
-    try {
-      const productsData = await fetchData();
-      dispatch(
-        productsActions.setSearchedProducts({ products: productsData.products })
-      );
-    } catch (error) {
-      console.log("error", error.message);
-    }
+    const productsData = await fetchData();
+    dispatch(
+      productsActions.setSearchedProducts({ products: productsData.products })
+    );
   };
 };
 
@@ -64,13 +53,8 @@ export const deleteProduct = (id) => {
 
       return data;
     };
-
-    try {
-      await deleteProductHandler();
-      dispatch(productsActions.deleteProduct({ productId: id }));
-    } catch (error) {
-      console.log("error", error.message);
-    }
+    await deleteProductHandler();
+    dispatch(productsActions.deleteProduct({ productId: id }));
   };
 };
 
@@ -89,24 +73,18 @@ export const createProduct = (productData) => {
       }
 
       const data = await response.json();
-      console.log("data", data);
       return data;
     };
 
-    try {
-      const createdProduct = await createProductHandler();
-      console.log("createdProduct", createdProduct);
-      dispatch(
-        productsActions.createProduct({
-          product: {
-            ...createdProduct,
-            id: Math.floor(Math.random() * 1000 + 100),
-          },
-        })
-      );
-    } catch (error) {
-      console.log("error", error.message);
-    }
+    const createdProduct = await createProductHandler();
+    dispatch(
+      productsActions.createProduct({
+        product: {
+          ...createdProduct,
+          id: Math.floor(Math.random() * 1000 + 100),
+        },
+      })
+    );
   };
 };
 
@@ -123,23 +101,16 @@ export const updateProduct = (id, productData) => {
       if (!response.ok) {
         throw new Error("Could not fetch products!");
       }
-      console.log("teke teke");
       const data = await response.json();
-      console.log("data", data);
       return data;
     };
 
-    try {
-      const updatedProduct = await updateProductHandler();
-      console.log("updatedProduct", updatedProduct);
-      dispatch(
-        productsActions.updateProduct({
-          productId: id,
-          product: updatedProduct,
-        })
-      );
-    } catch (error) {
-      console.log("error", error.message);
-    }
+    const updatedProduct = await updateProductHandler();
+    dispatch(
+      productsActions.updateProduct({
+        productId: id,
+        product: updatedProduct,
+      })
+    );
   };
 };

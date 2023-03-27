@@ -1,27 +1,15 @@
 import React, { useEffect } from "react";
 
 import "./App.css";
-import {
-  createBrowserRouter,
-  RouterProvider,
-  createRoutesFromElements,
-  Route,
-} from "react-router-dom";
+import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import ProductStoreScreen from "./screens/ProductStore/ProductStoreScreen";
 import CreateProductScreen from "./screens/CreateProduct/CreateProductScreen";
 import RootLayout from "./screens/Root/Root";
 import ErrorPage from "./screens/Error/Error";
-import ProductDetailsScreen from "./screens/ProductDetails/ProductDetailsScreen";
 import { useDispatch } from "react-redux";
 import { fetchProducts } from "./store/products-action";
-// const routeDefinitions = createRoutesFromElements(
-//   <Route>
-//     <Route path="/" element={<ProductStoreScreen />} />
-//     <Route path="/create-product" element={<CreateProductScreen />} />
-//   </Route>
-// )
-
-// const router = createBrowserRouter(routeDefinitions);
+import { ToastProvider } from "react-toast-notifications";
+import { uiActions } from "./store/ui-slice";
 
 const router = createBrowserRouter([
   {
@@ -30,12 +18,10 @@ const router = createBrowserRouter([
     errorElement: <ErrorPage />,
     children: [
       { path: "/", element: <ProductStoreScreen /> },
-      { path: "/create-product", element: <CreateProductScreen /> },
-      { path: "/product/:productId", element: <CreateProductScreen /> },
+      { path: "/create-product", Component: () => <CreateProductScreen /> },
+      { path: "/product/:productId", Component: () => <CreateProductScreen /> },
     ],
   },
-  // {path: '/', element: <ProductStoreScreen />},
-  // {path: '/create-product', element: <CreateProductScreen />},
 ]);
 
 function App() {
@@ -44,18 +30,34 @@ function App() {
   useEffect(() => {
     const getProducts = async () => {
       try {
-        // setIsLoading(true);
+        dispatch(
+          uiActions.changeStatus({
+            isLoading: true,
+          })
+        );
         await dispatch(fetchProducts());
       } catch (error) {
         console.log("error", error.message);
       } finally {
-        // setIsLoading(false);
+        dispatch(
+          uiActions.changeStatus({
+            isLoading: false,
+          })
+        );
       }
     };
     getProducts();
   }, [dispatch]);
 
-  return <RouterProvider router={router} />;
+  return (
+    <ToastProvider
+      autoDismiss
+      autoDismissTimeout={6000}
+      placement="bottom-center"
+    >
+      <RouterProvider router={router} />;
+    </ToastProvider>
+  );
 }
 
 export default App;

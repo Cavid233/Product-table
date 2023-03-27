@@ -31,7 +31,7 @@ const productsSlice = createSlice({
         (product) => product.id === action.payload.product.id
       );
       state.products[productIndex] = action.payload.product;
-    }
+    },
   },
 });
 

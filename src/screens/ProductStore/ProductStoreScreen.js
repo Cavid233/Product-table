@@ -7,15 +7,24 @@ import {
   setSearchedProducts,
 } from "../../store/products-action";
 import { productsActions } from "../../store/products-slice";
-
+import { useToasts } from "react-toast-notifications";
+import { uiActions } from "../../store/ui-slice";
 
 export default function ProductStoreScreen() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  const { addToast } = useToasts();
+
   const [searchTerm, setSearchTerm] = useState("");
-  const [isLoading, setIsLoading] = useState(false);
+  const [currentProducts, setCurrentProducts] = useState([]);
+
+  const productStoreIsLoading = useSelector(
+    (state) => state.ui.ProductStoreScreen.isLoading
+  );
   const productsList = useSelector((state) => state.products.products);
-  const searchedProducts = useSelector((state) => state.products.searchedProducts);
+  const searchedProducts = useSelector(
+    (state) => state.products.searchedProducts
+  );
 
   const debounce = useCallback((callback, delay) => {
     let timeoutId;
@@ -27,38 +36,111 @@ export default function ProductStoreScreen() {
     };
   }, []);
 
+  const removeHandler = async (productId) => {
+    try {
+      await dispatch(deleteProduct(productId));
+      addToast("Product Removed", {
+        appearance: "success",
+        autoDismiss: true,
+      });
+    } catch (error) {
+      addToast("Something Went Wrong", {
+        appearance: "error",
+        autoDismiss: true,
+      });
+    }
+  };
 
   useEffect(() => {
     if (searchTerm) {
-      console.log("searchterm is here")
-      setIsLoading(true);
+      dispatch(
+        uiActions.changeStatus({
+          isLoading: true,
+        })
+      );
       const debouncedSearch = debounce(async () => {
-        await dispatch(setSearchedProducts(searchTerm));
-        setIsLoading(false);
+        try {
+          await dispatch(setSearchedProducts(searchTerm));
+        } catch (error) {
+          addToast("Something Went Wrong", {
+            appearance: "error",
+            autoDismiss: true,
+          });
+        } finally {
+          dispatch(
+            uiActions.changeStatus({
+              isLoading: false,
+            })
+          );
+        }
       }, 500); // debounce delay in milliseconds
       debouncedSearch();
-    }else {
-      console.log("I am here man")
-      dispatch(
-        productsActions.setSearchedProducts({ products: [] })
-      );
+    } else {
+      dispatch(productsActions.setSearchedProducts({ products: [] }));
     }
-  }, [searchTerm, debounce, dispatch]);
-
-  const navigateToCreateProductForm = () => {
-    navigate("/create-product");
-  };
+  }, [searchTerm, debounce, addToast, dispatch]);
 
   const changeHandler = (e) => {
     const value = e.target.value;
     setSearchTerm(value);
   };
 
+  useEffect(() => {
+    setCurrentProducts(searchTerm ? searchedProducts : productsList);
+  }, [searchTerm, searchedProducts, productsList]);
+
+  const filterProducts = (event) => {
+    const value = event.target.value;
+    console.log("currentProducts", currentProducts);
+    switch (value) {
+      case "reccomend":
+        setCurrentProducts(searchTerm ? searchedProducts : productsList);
+        break;
+      case "Price: Low to High":
+        const lowToHighPrice = [...currentProducts];
+        lowToHighPrice.sort((a, b) => a.price - b.price);
+        setCurrentProducts(lowToHighPrice);
+        break;
+      case "Price: High to Low":
+        const highToLowPrice = [...currentProducts];
+        highToLowPrice.sort((a, b) => b.price - a.price);
+        setCurrentProducts(highToLowPrice);
+        break;
+      case "Rating: Low to High":
+        const highToLowRating = [...currentProducts];
+        highToLowRating.sort((a, b) => a.rating - b.rating);
+        setCurrentProducts(highToLowRating);
+        break;
+      case "Rating: High to Low":
+        const lowToHighRating = [...currentProducts];
+        lowToHighRating.sort((a, b) => b.rating - a.rating);
+        setCurrentProducts(lowToHighRating);
+        break;
+
+      default:
+        break;
+    }
+  };
+
   return (
     <div className="App">
       <header>
-        
         <div className="header-actions">
+          <div className="header-filter">
+            <select name="products" id="products" onChange={filterProducts}>
+              <optgroup label="Our Reccomendations">
+                <option value="reccomend">Reccomend</option>
+              </optgroup>
+              <optgroup label="Price">
+                <option value="Price: Low to High">Low to High</option>
+                <option value="Price: High to Low">High to Low</option>
+              </optgroup>
+              <optgroup label="Rating">
+                <option value="Rating: Low to High">Low to High</option>
+                <option value="Rating: High to Low">High to Low</option>
+              </optgroup>
+            </select>
+          </div>
           <div className="header-search">
             <input
               type="text"
@@ -68,14 +150,9 @@ export default function ProductStoreScreen() {
               onChange={changeHandler}
             />
           </div>
-          <div className="header-create">
-            <button onClick={navigateToCreateProductForm}>
-              Create New Product
-            </button>
-          </div>
         </div>
       </header>
-      {isLoading ? (
+      {productStoreIsLoading ? (
         <div
           style={{
             marginTop: "200px",
@@ -92,7 +169,7 @@ export default function ProductStoreScreen() {
                 <th>ID</th>
                 <th>Name</th>
                 <th>Description</th>
-                <th>Price</th>
+                <th>Price </th>
                 <th>Photo</th>
                 <th>Rating</th>
                 <th>Stock</th>
@@ -102,7 +179,7 @@ export default function ProductStoreScreen() {
               </tr>
             </thead>
             <tbody>
-              {(searchTerm ? searchedProducts : productsList).map((product) => (
+              {currentProducts.map((product) => (
                 <tr key={product.id}>
                   <td>{product.id}</td>
                   <td>{product.title}</td>
@@ -125,7 +202,7 @@ export default function ProductStoreScreen() {
                   <td>
                     <button
                       className="remove"
-                      onClick={() => dispatch(deleteProduct(product.id))}
+                      onClick={() => removeHandler(product.id)}
                     >
                       Remove
                     </button>

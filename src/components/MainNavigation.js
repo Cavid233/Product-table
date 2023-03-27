@@ -10,7 +10,6 @@ export default function MainNavigation() {
       </div>
       <ul>
         <li>
-          {/* <Link to="/">Home</Link> */}
           <NavLink
             to="/"
             className={({ isActive }) => isActive && "active-link"}

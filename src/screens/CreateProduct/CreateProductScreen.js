@@ -1,24 +1,27 @@
+import React from "react";
+
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
 import { createProduct, updateProduct } from "../../store/products-action";
 import "./CreateProductForm.css"; // Import the CSS file
-
-
+import { useToasts } from "react-toast-notifications";
 
 const CreateProductForm = () => {
   const dispatch = useDispatch();
   const params = useParams();
-  const isUpdateProduct = params.productId ? true : false;
+  const { addToast } = useToasts();
 
+  const isUpdateProduct = params.productId ? true : false;
   const productsList = useSelector((state) => state.products.products);
-  console.log("productList", productsList)
-  const searchedProducts = useSelector((state) => state.products.searchedProducts);
+  const searchedProducts = useSelector(
+    (state) => state.products.searchedProducts
+  );
   const allProducts = productsList.concat(searchedProducts);
   const product = allProducts.find(
     (product) => product.id === Number(params.productId)
   );
-  console.log("product", product)
+
   const createProductHandler = async (values) => {
     try {
       const newProduct = {
@@ -31,8 +34,15 @@ const CreateProductForm = () => {
         category: "category",
       };
       await dispatch(createProduct(newProduct));
+      addToast("New Product Added", {
+        appearance: "success",
+        autoDismiss: true,
+      });
     } catch (error) {
-      console.log("error", error.message);
+      addToast("Something Went Wrong", {
+        appearance: "error",
+        autoDismiss: true,
+      });
     }
   };
 
@@ -43,18 +53,25 @@ const CreateProductForm = () => {
         rating: values.rating,
       };
       await dispatch(updateProduct(product.id, updatedProduct));
+      addToast("Product Updated", {
+        appearance: "success",
+        autoDismiss: true,
+      });
     } catch (error) {
-      console.log("error", error.message);
+      addToast("Something Went Wrong", {
+        appearance: "error",
+        autoDismiss: true,
+      });
     }
   };
 
   return (
     <Formik
       initialValues={{
-        name: isUpdateProduct ? product.title : "",
-        Brand: isUpdateProduct ? product.category : "",
-        year: isUpdateProduct ? product.year : "",
-        rating: isUpdateProduct ? product.rating : "",
+        name: isUpdateProduct ? product?.title : "",
+        Brand: isUpdateProduct ? product?.category : "",
+        year: isUpdateProduct ? product?.year : "",
+        rating: isUpdateProduct ? product?.rating : "",
       }}
       validate={(values) => {
         const errors = {};

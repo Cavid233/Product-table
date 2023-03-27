@@ -30,21 +30,6 @@
   color: white;
 }
 
-.header-create button {
-  background-color: #fff;
-  border: none;
-  padding: 10px 20px;
-  border-radius: 20px;
-  cursor: pointer;
-  color: #272727;
-  font-weight: bold;
-}
-
-.header-create button:hover {
-  background-color: pink;
-  color: white;
-}
-
 .product-list {
   margin-top: 20px;
 }
