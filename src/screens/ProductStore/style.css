@@ -7,11 +7,6 @@
   padding: 20px;
 }
 
-.header-title h1 {
-  font-size: 36px;
-  margin: 10;
-}
-
 .header-search input[type="text"] {
   width: 300px;
   padding: 10px;

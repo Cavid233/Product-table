@@ -18,10 +18,13 @@ li a {
   text-decoration: none;
 }
 
-li a:hover:not(.active) {
-  background-color: #111;
+.active-link {
+  background-color: #04aa6d;
 }
 
-.active {
-  background-color: #04aa6d;
+
+.header-title h1 {
+  font-size: 36px;
+  margin: 10;
+  text-align: center;
 }

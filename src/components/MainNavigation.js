@@ -1,27 +1,31 @@
 import React from "react";
-import {Link} from "react-router-dom"
-import "./style.css"
+import { NavLink } from "react-router-dom";
+import "./style.css";
 
 export default function MainNavigation() {
   return (
     <header>
+      <div className="header-title">
+        <h1>Product Store</h1>
+      </div>
       <ul>
         <li>
-            <Link to="/">Home</Link>
-          {/* <a href="#home">Home</a> */}
+          {/* <Link to="/">Home</Link> */}
+          <NavLink
+            to="/"
+            className={({ isActive }) => isActive && "active-link"}
+          >
+            Home
+          </NavLink>
         </li>
         <li>
-            <Link to="/create-product">Create Product</Link>
-          {/* <a href="#news">News</a> */}
+          <NavLink
+            to="/create-product"
+            className={({ isActive }) => isActive && "active-link"}
+          >
+            Create Product
+          </NavLink>
         </li>
-        <li>
-          <a href="#contact">Contact</a>
-        </li>
-        {/* <li style="float:right">
-          <a class="active" href="#about">
-            About
-          </a>
-        </li> */}
       </ul>
     </header>
   );

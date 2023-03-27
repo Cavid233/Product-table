@@ -1,3 +1,5 @@
+import React, { useEffect } from "react";
+
 import "./App.css";
 import {
   createBrowserRouter,
@@ -9,6 +11,9 @@ import ProductStoreScreen from "./screens/ProductStore/ProductStoreScreen";
 import CreateProductScreen from "./screens/CreateProduct/CreateProductScreen";
 import RootLayout from "./screens/Root/Root";
 import ErrorPage from "./screens/Error/Error";
+import ProductDetailsScreen from "./screens/ProductDetails/ProductDetailsScreen";
+import { useDispatch } from "react-redux";
+import { fetchProducts } from "./store/products-action";
 // const routeDefinitions = createRoutesFromElements(
 //   <Route>
 //     <Route path="/" element={<ProductStoreScreen />} />
@@ -26,6 +31,7 @@ const router = createBrowserRouter([
     children: [
       { path: "/", element: <ProductStoreScreen /> },
       { path: "/create-product", element: <CreateProductScreen /> },
+      { path: "/product/:productId", element: <CreateProductScreen /> },
     ],
   },
   // {path: '/', element: <ProductStoreScreen />},
@@ -33,6 +39,22 @@ const router = createBrowserRouter([
 ]);
 
 function App() {
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    const getProducts = async () => {
+      try {
+        // setIsLoading(true);
+        await dispatch(fetchProducts());
+      } catch (error) {
+        console.log("error", error.message);
+      } finally {
+        // setIsLoading(false);
+      }
+    };
+    getProducts();
+  }, [dispatch]);
+
   return <RouterProvider router={router} />;
 }
 
